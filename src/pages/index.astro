@@ -15,14 +15,19 @@ import "../styles/global.css";
       </p>
       <h1>Caesar Mayienga</h1>
       <p class="tagline">Telecom &amp; Compute Engineer | Data &amp; AI | IEEE Member</p>
-      <p class="focus">Cloud infrastructure, cybersecurity &amp; ethical hacking, computer networking, IoT &amp; OT security.</p>
+      <div class="shell" aria-label="A short terminal session about Caesar">
+        <p class="cmd"><span class="ps">$</span> <span class="t">ls skills/</span></p>
+        <p class="out">packets/  pipelines/  prompts/  protocols/</p>
+        <p class="cmd"><span class="ps">$</span> <span class="t">cat mission.txt</span></p>
+        <p class="out">Building the pipes, and the minds that run through them, for Africa.</p>
+      </div>
       <div class="cta">
         <a class="btn primary" href="#projects">View projects</a>
         <a class="btn" href="/Caesar-Mayienga-CV.pdf" download>Download CV</a>
       </div>
       <p class="links">
-        <a href="https://github.com/KaiserMayienga">github</a> ·
-        <a href="https://www.linkedin.com/in/caesar-mayienga">linkedin</a> ·
+        <a href="https://github.com/KaiserMayienga">github</a>
+        <a href="https://www.linkedin.com/in/caesar-mayienga">linkedin</a>
         <a href="mailto:kaisermayienga@gmail.com">email</a>
       </p>
     </main>
@@ -46,6 +51,30 @@ import "../styles/global.css";
       }
     </script>
 
+    <script>
+      const shell = Array.from(document.querySelectorAll<HTMLElement>(".shell p"));
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const pause = (ms: number) => new Promise((r) => setTimeout(r, ms));
+        const run = async () => {
+          const texts = shell.map((l) => l.querySelector<HTMLElement>(".t")?.textContent ?? "");
+          shell.forEach((l) => { l.style.visibility = "hidden"; l.querySelector(".t")?.replaceChildren(); });
+          await pause(1100);
+          for (let i = 0; i < shell.length; i++) {
+            const line = shell[i];
+            const t = line.querySelector<HTMLElement>(".t");
+            line.style.visibility = "visible";
+            if (t) {
+              for (const ch of texts[i]) { t.textContent += ch; await pause(55); }
+              await pause(250);
+            } else {
+              await pause(350);
+            }
+          }
+        };
+        run();
+      }
+    </script>
+
     <style>
       .hero { max-width: 760px; margin: 0 auto; padding: 14vh 1.5rem 6rem; }
       .prompt { font-family: var(--mono); color: var(--muted); font-size: .95rem; }
@@ -55,7 +84,10 @@ import "../styles/global.css";
       @keyframes blink { 50% { opacity: 0; } }
       h1 { font-family: var(--mono); font-size: clamp(2.4rem, 7vw, 4rem); margin: 1rem 0 .5rem; letter-spacing: -.02em; }
       .tagline { font-size: 1.15rem; max-width: 34em; line-height: 1.6; }
-      .focus { color: var(--muted); max-width: 34em; line-height: 1.6; margin: .2rem 0 0; }
+      .shell { margin: 1.6rem 0 0; padding: 1rem 1.2rem; max-width: 34em; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; font-family: var(--mono); font-size: .9rem; line-height: 1.7; }
+      .shell p { margin: 0; }
+      .shell .ps { color: var(--green); }
+      .shell .out { color: var(--cyan); white-space: pre-wrap; padding-left: 1.2ch; margin-bottom: .4rem; }
       .cta { display: flex; gap: .8rem; margin: 2rem 0 1.5rem; flex-wrap: wrap; }
       .btn {
         font-family: var(--mono); font-size: .9rem; padding: .7rem 1.1rem;
@@ -65,7 +97,7 @@ import "../styles/global.css";
       .btn:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
       .btn.primary { background: var(--cyan); color: var(--bg); border-color: var(--cyan); font-weight: 600; }
       .btn.primary:hover { color: var(--bg); box-shadow: 0 0 24px rgba(34,211,238,.35); }
-      .links { font-family: var(--mono); font-size: .85rem; color: var(--muted); }
+      .links { display: flex; gap: 1.4rem; font-family: var(--mono); font-size: .85rem; color: var(--muted); }
       .links a { color: var(--muted); text-decoration: none; }
       .links a:hover { color: var(--cyan); }
       .label { font-family: var(--mono); color: var(--cyan); font-weight: 400; }
