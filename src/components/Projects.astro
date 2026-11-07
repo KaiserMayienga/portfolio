@@ -1,0 +1,323 @@
+---
+type Layer = {
+  id: string;
+  name: string;
+  tech: string;
+  status: "live" | "designed" | "planned" | "human";
+  note: string;
+};
+
+// Edit the status of each layer to match reality: live, designed or planned.
+const layers: Layer[] = [
+  { id: "ui", name: "Interface", tech: "Next.js", status: "live", note: "Where customers and staff book, ask and track their job." },
+  { id: "api", name: "API", tech: "FastAPI", status: "designed", note: "Receives every request and sends it to the right workflow." },
+  { id: "agents", name: "Orchestration", tech: "LangGraph", status: "planned", note: "Runs the agent steps: triage, estimates, scheduling and status updates." },
+  { id: "memory", name: "Retrieval", tech: "Qdrant", status: "planned", note: "Vector search that grounds answers in the workshop's own data." },
+  { id: "model", name: "Model", tech: "Qwen via Ollama", status: "designed", note: "A self-hosted language model that drafts replies and estimates." },
+  { id: "data", name: "Data", tech: "PostgreSQL on Neon", status: "live", note: "Stores customers, jobs and schedules." },
+  { id: "obs", name: "Observability", tech: "Monitoring", status: "designed", note: "Lets the team see what the agents did and why." },
+  { id: "tech", name: "Technician", tech: "A person", status: "human", note: "Anything safety-critical is diagnosed by a person, never by the model." },
+];
+
+const requests = [
+  {
+    label: "Book an oil change for Friday",
+    path: ["ui", "api", "agents", "memory", "model", "data", "obs"],
+    end: "Booked, and the customer gets a status update.",
+  },
+  {
+    label: "My brakes feel soft. What's wrong?",
+    path: ["ui", "api", "agents", "data", "obs", "tech"],
+    end: "Safety-critical, so a technician takes over. The model never diagnoses it.",
+  },
+];
+
+const features = [
+  { name: "Events & concerts", text: "A feed of campus events, with ticket payments through M-Pesa Daraja." },
+  { name: "Past papers", text: "Past exam papers, in one place." },
+  { name: "Marketplace", text: "Students buy and sell with each other." },
+  { name: "Attachments board", text: "Attachment opportunities, posted for students." },
+  { name: "Peer support", text: "An anonymous space for student mental health." },
+];
+
+// "built" is your honest one-liner on what you personally built. Empty = not shown.
+const projects = [
+  {
+    slug: "autoflow-ai",
+    name: "AutoFlow AI",
+    status: "Phase 1 live",
+    blurb: "Workflow automation for automotive workshops: customer service, triage, estimates, scheduling and status updates. Anything safety-critical stays with a technician.",
+    built: "",
+    facts: ["7-layer architecture", "Auto-deploys from GitHub"],
+    stack: ["Next.js", "FastAPI", "LangGraph", "Qdrant", "Qwen via Ollama", "PostgreSQL"],
+    demo: "https://autoflow-ai-kaiser.netlify.app",
+    repo: "https://github.com/KaiserMayienga/autoflow-ai",
+  },
+  {
+    slug: "campushive",
+    name: "CampusHive",
+    status: "Live",
+    blurb: "A campus hub for JKUAT students, built for the Millennium Fellowship. Works on mobile and desktop.",
+    built: "",
+    facts: ["30+ student peers gave feedback"],
+    stack: ["HTML/CSS", "Supabase", "Google OAuth", "Netlify", "M-Pesa Daraja"],
+    demo: "https://campushive-jkuat.netlify.app",
+    repo: "",
+  },
+  {
+    slug: "shamba-smart",
+    name: "Shamba Smart",
+    status: "UX design",
+    blurb: "An agronomic advisory platform for Kenyan smallholder farmers, reachable by app, SMS and USSD.",
+    built: "",
+    facts: ["My role: UX designer, Sharp Team"],
+    stack: [],
+    demo: "",
+    repo: "",
+  },
+  {
+    slug: "name-that-llm",
+    name: "Kaggle: Name That LLM",
+    status: "Competing",
+    blurb: "Attributing passages to one of 18 source LLMs, scored on balanced accuracy. The competition ends in January 2027.",
+    built: "",
+    facts: ["18 candidate models"],
+    stack: [],
+    demo: "",
+    repo: "",
+  },
+];
+---
+
+<section id="projects" class="wrap">
+  <p class="pp"><span class="u">kaiser@nairobi</span>:<span class="d">~/projects</span>$ ls</p>
+
+  <div class="tabs" role="tablist" aria-label="Projects">
+    {projects.map((p, i) => (
+      <button
+        class="tab"
+        role="tab"
+        id={`tab-${p.slug}`}
+        aria-controls={`panel-${p.slug}`}
+        aria-selected={i === 0 ? "true" : "false"}
+        data-slug={p.slug}
+      >{p.slug}/</button>
+    ))}
+  </div>
+
+  {projects.map((p, i) => (
+    <article
+      class="win"
+      role="tabpanel"
+      id={`panel-${p.slug}`}
+      aria-labelledby={`tab-${p.slug}`}
+      data-slug={p.slug}
+      hidden={i !== 0}
+    >
+      <div class="bar"><i></i><i></i><i></i><span>~/projects/{p.slug}</span></div>
+
+      <div class:list={["body", p.slug === "autoflow-ai" && "two"]}>
+        <div class="main">
+          <h3>{p.name} <small class="tag">{p.status}</small></h3>
+          <p class="blurb">{p.blurb}</p>
+          {p.built && <p class="built"><strong>What I built:</strong> {p.built}</p>}
+          {p.facts.length > 0 && <p class="facts">{p.facts.join("   ")}</p>}
+          {p.stack.length > 0 && (
+            <p class="stackline">{p.stack.map((s) => <span class="pill">{s}</span>)}</p>
+          )}
+          {(p.demo || p.repo) && (
+            <p class="links">
+              {p.demo && <a class="pbtn primary" href={p.demo} target="_blank" rel="noopener">Open live site</a>}
+              {p.repo && <a class="pbtn" href={p.repo} target="_blank" rel="noopener">View code</a>}
+            </p>
+          )}
+
+          {p.slug === "campushive" && (
+            <div class="feat">
+              <div class="chips" role="group" aria-label="CampusHive features">
+                {features.map((f) => (
+                  <button class="chip" data-text={f.text}>{f.name}</button>
+                ))}
+              </div>
+              <p class="chip-out" aria-live="polite">Pick a feature to see what it does.</p>
+            </div>
+          )}
+        </div>
+
+        {p.slug === "autoflow-ai" && (
+          <div class="side">
+            <p class="cap">Send a request through the design</p>
+            <div id="reqs" class="reqs">
+              {requests.map((r, k) => <button class="req" data-i={k}>{r.label}</button>)}
+            </div>
+            <div id="stack" class="stack" data-requests={JSON.stringify(requests)}>
+              {layers.map((l) => (
+                <button class="layer" data-layer={l.id} data-note={l.note}>
+                  <span class="lname">{l.name}</span>
+                  <span class="ltech">{l.tech}</span>
+                  <span class={`badge ${l.status}`}>{l.status}</span>
+                </button>
+              ))}
+            </div>
+            <p id="stack-out" class="stack-out" aria-live="polite">Pick a request, or tap any layer to see its job.</p>
+            <p class="legend">live: running now. designed: in the architecture. planned: Phase 2.</p>
+          </div>
+        )}
+      </div>
+    </article>
+  ))}
+</section>
+
+<script>
+  // Tabs
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>("#projects [role=tab]"));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>("#projects [role=tabpanel]"));
+  const select = (slug: string) => {
+    tabs.forEach((t) => t.setAttribute("aria-selected", String(t.dataset.slug === slug)));
+    panels.forEach((p) => { p.hidden = p.dataset.slug !== slug; });
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => select(t.dataset.slug ?? ""));
+    t.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+      next.focus();
+      select(next.dataset.slug ?? "");
+    });
+  });
+
+  // Feature chips
+  document.querySelectorAll<HTMLElement>("#projects .chips").forEach((group) => {
+    const out = group.parentElement?.querySelector<HTMLElement>(".chip-out");
+    const chips = Array.from(group.querySelectorAll<HTMLButtonElement>(".chip"));
+    chips.forEach((c) =>
+      c.addEventListener("click", () => {
+        chips.forEach((x) => x.classList.remove("on"));
+        c.classList.add("on");
+        if (out) out.textContent = c.dataset.text ?? "";
+      })
+    );
+  });
+
+  // AutoFlow request walkthrough
+  const stack = document.querySelector<HTMLElement>("#stack");
+  const out = document.querySelector<HTMLElement>("#stack-out");
+  if (stack && out) {
+    type Req = { label: string; path: string[]; end: string };
+    const requests: Req[] = JSON.parse(stack.dataset.requests ?? "[]");
+    const rows = new Map<string, HTMLElement>(
+      Array.from(stack.querySelectorAll<HTMLElement>("[data-layer]")).map((r): [string, HTMLElement] => [r.dataset.layer ?? "", r])
+    );
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const pause = (ms: number) => new Promise((r) => setTimeout(r, reduce ? 0 : ms));
+    const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>("#reqs .req"));
+    let run = 0;
+
+    const reset = () => rows.forEach((r) => r.classList.remove("lit", "done", "skip"));
+
+    const play = async (i: number) => {
+      const id = ++run;
+      const req = requests[i];
+      reset();
+      out.textContent = "";
+      for (const [key, row] of rows) {
+        if (id !== run) return;
+        if (!req.path.includes(key)) { row.classList.add("skip"); continue; }
+        row.classList.add("lit");
+        out.textContent = row.dataset.note ?? "";
+        await pause(800);
+        if (id !== run) return;
+        row.classList.replace("lit", "done");
+      }
+      out.textContent = req.end;
+    };
+
+    buttons.forEach((b, i) =>
+      b.addEventListener("click", () => {
+        buttons.forEach((x) => x.classList.remove("on"));
+        b.classList.add("on");
+        play(i);
+      })
+    );
+    rows.forEach((row) =>
+      row.addEventListener("click", () => {
+        run++;
+        reset();
+        buttons.forEach((x) => x.classList.remove("on"));
+        row.classList.add("lit");
+        out.textContent = row.dataset.note ?? "";
+      })
+    );
+  }
+</script>
+
+<style>
+  .wrap { max-width: 920px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+  .pp { font-family: var(--mono); color: var(--muted); font-size: .95rem; margin: 0 0 1rem; }
+  .u { color: var(--green); }
+  .d { color: var(--cyan); }
+
+  .tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+  .tab {
+    font-family: var(--mono); font-size: .85rem; padding: .5rem .8rem; cursor: pointer;
+    background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 6px; transition: .2s;
+  }
+  .tab:hover { color: var(--text); border-color: var(--muted); }
+  .tab[aria-selected="true"] { color: var(--bg); background: var(--cyan); border-color: var(--cyan); font-weight: 600; }
+  .tab:focus-visible, .req:focus-visible, .chip:focus-visible, .layer:focus-visible, .pbtn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+  .win { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .bar { display: flex; align-items: center; gap: 6px; padding: .6rem .9rem; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: .8rem; color: var(--muted); }
+  .bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+  .bar span { margin-left: auto; }
+
+  .body { padding: 1.4rem; display: grid; gap: 1.8rem; }
+  .body.two { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 760px) { .body.two { grid-template-columns: 1fr; } }
+
+  h3 { font-family: var(--mono); font-size: 1.4rem; margin: 0 0 .6rem; }
+  .tag { font-size: .7rem; color: var(--green); border: 1px solid var(--green); border-radius: 4px; padding: 1px 6px; margin-left: .5rem; vertical-align: middle; font-weight: 400; }
+  .blurb { line-height: 1.6; margin: 0 0 1rem; }
+  .built { color: var(--text); margin: 0 0 1rem; }
+  .facts { font-family: var(--mono); font-size: .8rem; color: var(--muted); margin: 0 0 1rem; white-space: pre-wrap; }
+  .stackline { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1.2rem; }
+  .pill { font-family: var(--mono); font-size: .75rem; color: var(--cyan); border: 1px solid var(--line); border-radius: 4px; padding: 2px 8px; }
+
+  .links { display: flex; flex-wrap: wrap; gap: .7rem; margin: 0; }
+  .pbtn { font-family: var(--mono); font-size: .85rem; padding: .6rem 1rem; border: 1px solid var(--line); border-radius: 6px; color: var(--text); text-decoration: none; background: var(--bg); transition: .2s; }
+  .pbtn:hover { border-color: var(--cyan); color: var(--cyan); }
+  .pbtn.primary { background: var(--cyan); color: var(--bg); border-color: var(--cyan); font-weight: 600; }
+  .pbtn.primary:hover { color: var(--bg); box-shadow: 0 0 20px rgba(34,211,238,.35); }
+
+  .feat { margin-top: 1.4rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .chip, .req {
+    font-family: var(--mono); font-size: .8rem; padding: .45rem .75rem; cursor: pointer; text-align: left;
+    background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 6px; transition: .2s;
+  }
+  .chip:hover, .req:hover { border-color: var(--cyan); }
+  .chip.on, .req.on { border-color: var(--cyan); color: var(--cyan); }
+  .chip-out { font-family: var(--mono); font-size: .85rem; color: var(--cyan); min-height: 2.6em; margin: .9rem 0 0; }
+
+  .cap { font-family: var(--mono); font-size: .8rem; color: var(--muted); margin: 0 0 .6rem; }
+  .reqs { display: grid; gap: .4rem; margin-bottom: 1rem; }
+  .stack { display: grid; gap: .35rem; }
+  .layer {
+    display: grid; grid-template-columns: 1fr auto; column-gap: .6rem; text-align: left; cursor: pointer;
+    font-family: var(--mono); color: var(--text); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 6px; padding: .5rem .7rem; transition: .25s;
+  }
+  .layer[data-layer="tech"] { border-style: dashed; }
+  .lname { font-size: .85rem; }
+  .ltech { grid-column: 1; font-size: .72rem; color: var(--muted); }
+  .badge { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: .62rem; border: 1px solid currentColor; border-radius: 4px; padding: 1px 6px; }
+  .badge.live { color: var(--green); }
+  .badge.designed { color: var(--muted); }
+  .badge.planned { color: var(--cyan); }
+  .badge.human { color: var(--text); }
+  .layer.lit { border-color: var(--cyan); box-shadow: 0 0 18px rgba(34,211,238,.3); transform: translateX(4px); }
+  .layer.done { border-left: 3px solid var(--green); }
+  .layer.skip { opacity: .35; }
+  .stack-out { font-family: var(--mono); font-size: .85rem; color: var(--cyan); min-height: 3.6em; margin: .9rem 0 .4rem; }
+  .legend { font-family: var(--mono); font-size: .7rem; color: var(--muted); margin: 0; }
+</style>
