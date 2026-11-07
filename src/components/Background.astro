@@ -1,0 +1,168 @@
+---
+// Edit freely. Anything with an empty "detail" shows as a plain line, not an expandable one.
+const commits = [
+  { hash: "c4a91e7", title: "Data Annotator (Contract)", where: "CloudFactory", when: "Sep 2026 to now", now: true,
+    detail: "Annotating video data across multiple frames for machine learning training sets, with a focus on accuracy and consistency. Learned first-hand how production datasets are built, reviewed and quality-checked." },
+  { hash: "9be3d05", title: "Sales Agent (Part-time)", where: "Geminia Life Insurance", when: "Oct 2026 to now", now: true,
+    detail: "Reached 100+ clients within the first weeks of the role." },
+  { hash: "5f20ab8", title: "Associate", where: "Ministry of Information, Communications and the Digital Economy", when: "Jul to Sep 2026", now: false, detail: "" },
+  { hash: "e71d4c2", title: "Project Committee Secretary", where: "JKUAT Society of Engineering Students", when: "Mar to Nov 2025", now: false,
+    detail: "Committee secretary for a student engineering community of about 1,000 members." },
+  { hash: "38ac6f9", title: "Onsite Sales Engineer (Intern)", where: "Megawatt Ingenieria Ltd", when: "Jun to Aug 2025", now: false,
+    detail: "Supported sales of electrical engineering products at a firm serving the national market in solar products, panels and energy storage (50,000+ solar products sold). Hands-on training in fiber optics technology and splicing." },
+  { hash: "b0d57e3", title: "Customer Support (Contract)", where: "ABL Limited", when: "Jan 2023 to Dec 2025", now: false,
+    detail: "Customer support covering the Nyanza region, a base of about 100,000 customers." },
+];
+
+const nuggets = [
+  "Annotates video frame by frame to train machine learning models.",
+  "Trained hands-on in fiber optic splicing at Megawatt Ingenieria.",
+  "Self-taught linear algebra, probability, statistics and machine learning, alongside an engineering degree.",
+  "Wired M-Pesa ticket payments into CampusHive through edge functions.",
+  "Reached 100+ clients in the first weeks as a Geminia sales agent.",
+  "Supported a customer base of about 100,000 across the Nyanza region at ABL.",
+  "Speaks English and Swahili fluently, plus elementary Russian.",
+];
+
+const certs = [
+  { dir: "cloud-ai", items: [
+    ["AWS Intro to Cloud Engineering", "Oct 2026"],
+    ["Oracle Agentic AI Foundations Associate", "Aug 2026"],
+    ["Oracle OCI 2025 Certified Developer Professional", "Oct 2025"],
+    ["Oracle AI Foundations Associate", "Aug 2025"],
+  ] },
+  { dir: "security-networking", items: [
+    ["EXPLIoT Automotive IoT Security and OT Security", "Jun 2025"],
+    ["Cisco Ethical Hacker", "Jun 2025"],
+    ["Cisco Network Addressing and Basic Troubleshooting", "Apr 2025"],
+    ["Cisco Networking Basics", "Mar 2025"],
+  ] },
+  { dir: "data-web", items: [
+    ["alx_africa Data Analytics", "Jul 2026"],
+    ["alx_africa Professional Foundations", "May 2026"],
+    ["freeCodeCamp Responsive Web Design", "Mar 2025"],
+  ] },
+];
+---
+
+<section id="background" class="wrap">
+  <p class="pp"><span class="u">kaiser@nairobi</span>:<span class="d">~</span>$ git log --oneline</p>
+  <ol id="log" class="log">
+    {commits.map((c, i) => (
+      <li class="entry">
+        <span class="node" aria-hidden="true">*</span>
+        {c.detail ? (
+          <button class="commit" aria-expanded="false" aria-controls={`d-${i}`}>
+            <span class="hash">{c.hash}</span>
+            <span class="msg">{c.title}, {c.where}</span>
+            {c.now && <span class="now">now</span>}
+            <span class="when">{c.when}</span>
+          </button>
+        ) : (
+          <div class="commit plain">
+            <span class="hash">{c.hash}</span>
+            <span class="msg">{c.title}, {c.where}</span>
+            <span class="when">{c.when}</span>
+          </div>
+        )}
+        {c.detail && <p class="detail" id={`d-${i}`} hidden>{c.detail}</p>}
+      </li>
+    ))}
+  </ol>
+
+  <p class="pp second"><span class="u">kaiser@nairobi</span>:<span class="d">~</span>$ shuf -n1 nuggets.txt</p>
+  <div class="win">
+    <div class="body shuf">
+      <p id="nugget" class="nugget" aria-live="polite">{nuggets[0]}</p>
+      <button id="again" class="pbtn" data-nuggets={JSON.stringify(nuggets)}>Run again</button>
+    </div>
+  </div>
+
+  <p class="pp second"><span class="u">kaiser@nairobi</span>:<span class="d">~</span>$ ls certs/</p>
+  <div class="certs">
+    {certs.map((g) => (
+      <div class="win">
+        <div class="bar"><i></i><i></i><i></i><span>certs/{g.dir}/</span></div>
+        <ul class="body list">
+          {g.items.map(([name, when]) => (
+            <li><span class="cn">{name}</span><span class="cw">{when}</span></li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <p class="pp second"><span class="u">kaiser@nairobi</span>:<span class="d">~</span>$ cat education.txt</p>
+  <p class="edu">
+    Telecommunications and Information Engineering (Electrical and Electronics Engineering), JKUAT, since Sep 2023.
+    IEEE Member. JKUAT Society of Engineering, AIESEC, Rotaract Junior Club, and the Planning and Development committee at UNESCO JKUAT.
+  </p>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("#log button.commit").forEach((b) =>
+    b.addEventListener("click", () => {
+      const open = b.getAttribute("aria-expanded") === "true";
+      b.setAttribute("aria-expanded", String(!open));
+      const d = document.getElementById(b.getAttribute("aria-controls") ?? "");
+      if (d) d.hidden = open;
+    })
+  );
+
+  const again = document.querySelector<HTMLButtonElement>("#again");
+  const box = document.querySelector<HTMLElement>("#nugget");
+  if (again && box) {
+    const nuggets: string[] = JSON.parse(again.dataset.nuggets ?? "[]");
+    let k = 0;
+    again.addEventListener("click", () => {
+      k = (k + 1 + Math.floor(Math.random() * (nuggets.length - 1))) % nuggets.length;
+      box.textContent = nuggets[k];
+    });
+  }
+</script>
+
+<style>
+  .wrap { max-width: 920px; margin: 0 auto; padding: 2rem 1.5rem 6rem; }
+  .pp { font-family: var(--mono); color: var(--muted); font-size: .95rem; margin: 0 0 1rem; }
+  .pp.second { margin-top: 3rem; }
+  .u { color: var(--green); }
+  .d { color: var(--cyan); }
+
+  .log { list-style: none; margin: 0; padding: 0; }
+  .entry { position: relative; padding-left: 1.6rem; }
+  .entry::before { content: ""; position: absolute; left: .42rem; top: 0; bottom: 0; width: 1px; background: var(--line); }
+  .node { position: absolute; left: 0; top: .55rem; font-family: var(--mono); color: var(--cyan); background: var(--bg); }
+  .commit {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .8rem; width: 100%; text-align: left;
+    font-family: var(--mono); font-size: .88rem; color: var(--text); background: transparent;
+    border: 0; border-radius: 6px; padding: .5rem .6rem; cursor: pointer; transition: .2s;
+  }
+  button.commit:hover { background: var(--panel); }
+  button.commit:focus-visible, .pbtn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+  .commit.plain { cursor: default; }
+  .hash { color: var(--green); }
+  .msg { flex: 1 1 14rem; }
+  .now { font-size: .65rem; color: var(--green); border: 1px solid var(--green); border-radius: 4px; padding: 1px 6px; }
+  .when { color: var(--muted); font-size: .78rem; margin-left: auto; }
+  .detail { margin: 0 0 .6rem; padding: .2rem .6rem .6rem; color: var(--text); line-height: 1.6; max-width: 46em; }
+  .detail[hidden] { display: none; }
+
+  .win { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .bar { display: flex; align-items: center; gap: 6px; padding: .6rem .9rem; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: .8rem; color: var(--muted); }
+  .bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+  .bar span { margin-left: auto; }
+  .body { padding: 1.2rem 1.4rem; }
+
+  .shuf { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+  .nugget { flex: 1 1 18rem; margin: 0; font-family: var(--mono); font-size: 1.05rem; line-height: 1.6; color: var(--cyan); min-height: 3.2em; }
+  .pbtn { font-family: var(--mono); font-size: .85rem; padding: .6rem 1rem; border: 1px solid var(--line); border-radius: 6px; color: var(--text); background: var(--bg); cursor: pointer; transition: .2s; }
+  .pbtn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  .certs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  @media (max-width: 860px) { .certs { grid-template-columns: 1fr; } }
+  .list { list-style: none; margin: 0; display: grid; gap: .8rem; }
+  .list li { display: grid; gap: .1rem; font-size: .9rem; line-height: 1.4; }
+  .cw { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+
+  .edu { max-width: 46em; line-height: 1.7; color: var(--text); margin: 0; }
+</style>
