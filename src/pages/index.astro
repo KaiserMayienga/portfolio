@@ -11,7 +11,8 @@ import Background from "../components/Background.astro";
     <meta name="description" content="Caesar (Ochieng) Mayienga, Telecom & Compute Engineer in Nairobi. Data & AI, cloud infrastructure, cybersecurity, networking, IoT & OT security." />
   </head>
   <body>
-    <main class="hero">
+    <main class="hero split">
+      <div class="copy">
       <p class="prompt">
         <span class="user">kaiser@nairobi</span>:<span class="path">~</span>$ <span id="typed"></span><span class="cursor">▍</span>
       </p>
@@ -32,6 +33,14 @@ import Background from "../components/Background.astro";
         <a href="https://www.linkedin.com/in/caesar-mayienga">linkedin</a>
         <a href="mailto:kaisermayienga@gmail.com">email</a>
       </p>
+      </div>
+      <aside class="badge">
+        <div class="bbar"><i></i><i></i><i></i><span>whoami.webp</span></div>
+        <div class="frame">
+          <img src="/caesar.webp" alt="Portrait of Caesar Mayienga" width="600" height="750" decoding="async" />
+        </div>
+        <p class="bcap"><span class="g">●</span> Nairobi, Kenya</p>
+      </aside>
     </main>
 
     <Projects />
@@ -102,6 +111,21 @@ import Background from "../components/Background.astro";
       .links a { color: var(--muted); text-decoration: none; }
       .links a:hover { color: var(--cyan); }
       .label { font-family: var(--mono); color: var(--cyan); font-weight: 400; }
+
+      .hero.split { max-width: 1000px; display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 3.5rem; align-items: center; }
+      .badge { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; transition: .3s; }
+      .badge:hover { border-color: var(--cyan); box-shadow: 0 0 30px rgba(34,211,238,.18); }
+      .bbar { display: flex; align-items: center; gap: 6px; padding: .6rem .9rem; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: .75rem; color: var(--muted); }
+      .bbar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+      .bbar span { margin-left: auto; }
+      .frame { line-height: 0; background: radial-gradient(circle at 50% 30%, rgba(34,211,238,.18), transparent 65%); }
+      .frame img { width: 100%; height: auto; display: block; }
+      .bcap { margin: 0; padding: .6rem .9rem; border-top: 1px solid var(--line); font-family: var(--mono); font-size: .78rem; color: var(--muted); }
+      .bcap .g { color: var(--green); }
+      @media (max-width: 800px) {
+        .hero.split { grid-template-columns: 1fr; gap: 2rem; }
+        .badge { order: -1; max-width: 200px; }
+      }
     </style>
   </body>
 </html>
